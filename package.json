@@ -1,0 +1,24 @@
+{
+  "name": "cms",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000c\u0000m\u0000s\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arjar88/cms.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/arjar88/cms/issues"
+  },
+  "homepage": "https://github.com/arjar88/cms#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mongoose": "^8.1.1"
+  }
+}
