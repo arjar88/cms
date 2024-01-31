@@ -4,7 +4,13 @@ const app = express();
 const port = 3000;
 const genericRoutes = require("./src/routes/genericRoutes");
 
-app.get("/api", genericRoutes);
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.send("Hello, Express!");
+});
+
+app.use("/api", genericRoutes);
 
 // Connect to MongoDB
 startServer();

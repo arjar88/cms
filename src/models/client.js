@@ -4,5 +4,5 @@ const clientSchema = new mongoose.Schema({
   domain: { type: String, required: true },
 });
 
-const Client = mongoose.model("User", clientSchema);
+const Client = mongoose.model("client", clientSchema);
 module.exports = Client;
