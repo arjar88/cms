@@ -51,15 +51,26 @@ const update = async (req, res) => {
   const { data } = req.body;
   try {
     const Model = mongoose.model(collection);
-    const updatedDocument = await Model.findByIdAndUpdate(
-      id,
-      { ...data },
-      { new: true }
-    );
-    if (!updatedDocument) {
-      return res.status(404).json({ error: "Document not found" });
+    if (collection === "data") {
+      const document = await Model.findById(id);
+      if (!document) {
+        return res.status(404).json({ error: "Document not found" });
+      }
+      const updatedValues = { ...document.values, ...data.values };
+      document.values = updatedValues;
+      const updatedDocument = await document.save();
+      res.status(200).json(updatedDocument);
+    } else {
+      const updatedDocument = await Model.findByIdAndUpdate(
+        id,
+        { ...data },
+        { new: true }
+      );
+      if (!updatedDocument) {
+        return res.status(404).json({ error: "Document not found" });
+      }
+      res.status(200).json(updatedDocument);
     }
-    res.status(200).json(updatedDocument);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
