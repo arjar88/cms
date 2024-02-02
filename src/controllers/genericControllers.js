@@ -56,11 +56,14 @@ const update = async (req, res) => {
       if (!document) {
         return res.status(404).json({ error: "Document not found" });
       }
+      //update the value properties
       const updatedValues = { ...document.values, ...data.values };
       document.values = updatedValues;
+      //save the update
       const updatedDocument = await document.save();
       res.status(200).json(updatedDocument);
     } else {
+      //find and update the property
       const updatedDocument = await Model.findByIdAndUpdate(
         id,
         { ...data },
