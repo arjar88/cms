@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
-const Client = require("../models/client");
-const Object = require("../models/object");
-const Properties = require("../models/properties");
-const Data = require("../models/data");
+const Client = require("../models/Client");
+const Object = require("../models/Object");
+const Properties = require("../models/Property");
+const Data = require("../models/Data");
 
 // Define CRUD operations for all collections
 const getAll = async (req, res) => {

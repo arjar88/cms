@@ -3,16 +3,16 @@ const mongoose = require("mongoose");
 const app = express();
 const port = 3000;
 const genericRoutes = require("./src/routes/genericRoutes");
+const authRoutes = require("./src/routes/authRoutes");
+const cookieParser = require("cookie-parser");
 
+//middleware
 app.use(express.json());
-
-app.get("/", (req, res) => {
-  res.send("Hello, Express!");
-});
+app.use(cookieParser());
 
 app.use("/api", genericRoutes);
+app.use("/auth", authRoutes);
 
-// Connect to MongoDB
 startServer();
 
 async function startServer() {
@@ -22,10 +22,7 @@ async function startServer() {
     app.listen(port, () => {
       console.log(`Server listening at http://localhost:${port}`);
     });
-    // Now you can start your Express app or perform other actions
   } catch (error) {
-    console.log(error);
     console.error("Error connecting to MongoDB:", error.message);
-    // Handle the error or exit the application if necessary
   }
 }
