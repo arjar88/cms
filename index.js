@@ -1,10 +1,11 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
-const port = 3000;
 const genericRoutes = require("./src/routes/genericRoutes");
 const authRoutes = require("./src/routes/authRoutes");
 const cookieParser = require("cookie-parser");
+
+require("dotenv").config();
 
 //middleware
 app.use(express.json());
@@ -17,6 +18,7 @@ startServer();
 
 async function startServer() {
   try {
+    const port = process.env.PORT || 3001;
     await mongoose.connect("mongodb://0.0.0.0:27017/cms-db");
     console.log("Connected to MongoDB");
     app.listen(port, () => {
