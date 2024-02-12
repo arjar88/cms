@@ -43,7 +43,6 @@ const signUp = async (req, res) => {
     const { email, password, role } = req.body;
 
     const user = await User.create({ email, password, role });
-    await user.save();
     const token = createToken(user._id, user.role);
 
     res.cookie("jwt", token, { httpOnly: true, maxAge: maxAge });

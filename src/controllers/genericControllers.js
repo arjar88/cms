@@ -4,6 +4,19 @@ const Object = require("../models/Object");
 const Properties = require("../models/Property");
 const Data = require("../models/Data");
 
+const isRoleAuthorized = (userRole, collection) => {
+  const allowedRoles = {
+    client: ["master admin"],
+    object: ["master admin", "admin"],
+    property: ["master admin", "admin"],
+    data: ["master admin", "admin"],
+  };
+
+  return (
+    allowedRoles[collection] && allowedRoles[collection].includes(userRole)
+  );
+};
+
 // Define CRUD operations for all collections
 const getAll = async (req, res) => {
   const { collection } = req.params;
@@ -49,6 +62,11 @@ const create = async (req, res) => {
 const update = async (req, res) => {
   const { collection, id } = req.params;
   const { data } = req.body;
+
+  if (!isRoleAuthorized(req.user.role, collection)) {
+    return res.status(403).json({ error: "Forbidden" });
+  }
+
   try {
     const Model = mongoose.model(collection);
     if (collection === "data") {

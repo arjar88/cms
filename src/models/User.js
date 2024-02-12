@@ -31,11 +31,11 @@ userSchema.pre("save", async function (next) {
 userSchema.statics.login = async function (email, password) {
   const user = await this.findOne({ email });
   if (user) {
-    const exist = await bcrypt.compare(password, user.password);
+    const exist = await bcrypt.compare(password.trim(), user.password);
     if (exist) {
       return user;
     }
-    throw Error("Incorrect Password");
+    throw Error("incorrect password");
   }
   throw Error("User Does Not Exist");
 };
