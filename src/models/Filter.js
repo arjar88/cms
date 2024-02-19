@@ -14,6 +14,8 @@ const filterSchema = new mongoose.Schema({
     ],
     required: true,
   },
+  creationDate: { type: Date, default: Date.now },
+  updateDate: { type: Date, default: Date.now },
 });
 
 const Filter = mongoose.model("filter", filterSchema);
