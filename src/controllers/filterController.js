@@ -1,4 +1,3 @@
-const mongoose = require("mongoose");
 const Filter = require("../models/Filter");
 const Data = require("../models/Data");
 
