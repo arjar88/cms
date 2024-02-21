@@ -54,11 +54,9 @@ const getFiltered = async (req, res) => {
     const objectId = filter.objectId.toString();
     const query = buildQuery(filter.filters, objectId);
     const data = await Data.find({ $or: query });
-    console.log(data, "filtered data");
     res.status(200).send(data);
   } catch (err) {
-    console.log(err);
-    res.status(500).send(err);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
