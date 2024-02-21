@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const app = express();
 const genericRoutes = require("./src/routes/genericRoutes");
 const authRoutes = require("./src/routes/authRoutes");
+const filterRoutes = require("./src/routes/filterRoutes");
 const cookieParser = require("cookie-parser");
 
 require("dotenv").config();
@@ -13,6 +14,7 @@ app.use(cookieParser());
 
 app.use("/api", genericRoutes);
 app.use("/auth", authRoutes);
+app.use("/filter", filterRoutes);
 
 startServer();
 
