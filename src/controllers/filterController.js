@@ -1,5 +1,6 @@
 const Filter = require("../models/Filter");
 const Data = require("../models/Data");
+const Published = require("../models/Published");
 
 const getMongoDBOperator = (operator, value) => {
   switch (operator) {
@@ -41,6 +42,25 @@ const buildQuery = (filters, objectId) => {
   });
 };
 
+const executeQuery = async (
+  objectId,
+  filters,
+  selectedProperties = undefined
+) => {
+  try {
+    // Check if selectedProperties is provided
+    const selection = selectedProperties
+      ? selectedProperties.map((prop) => `values.${prop}`).join(" ")
+      : undefined;
+    const query = buildQuery(filters, objectId);
+    const data = await Data.find({ $or: query }).select(selection);
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw err;
+  }
+};
+
 const getFiltered = async (req, res) => {
   const { id } = req.params;
   try {
@@ -49,14 +69,36 @@ const getFiltered = async (req, res) => {
     if (!filter) {
       return res.status(404).json({ error: "Filter not found" });
     }
-
-    const objectId = filter.objectId.toString();
-    const query = buildQuery(filter.filters, objectId);
-    const data = await Data.find({ $or: query });
+    const data = await executeQuery(filter.objectId.toString(), filter.filters);
     res.status(200).send(data);
   } catch (err) {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
-module.exports = { getFiltered };
+const getPublished = async (req, res) => {
+  const { uuid } = req.params;
+  try {
+    const published = await Published.findOne({ uuid });
+    if (!published) {
+      return res.status(404).json({ error: "Published document not found" });
+    }
+
+    const filter = await Filter.findById(published.filtersId);
+    if (!filter) {
+      return res.status(404).json({ error: "Filter not found" });
+    }
+
+    const data = await executeQuery(
+      filter.objectId.toString(),
+      filter.filters,
+      published.propertiesToShow
+    );
+    res.status(200).send(data);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+module.exports = { getFiltered, getPublished };
