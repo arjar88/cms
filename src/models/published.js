@@ -6,7 +6,7 @@ const publishedSchema = new mongoose.Schema({
     ref: "Client",
     required: true,
   },
-  uuid: { type: string, require: true },
+  uuid: { type: String, require: true },
   filtersId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Filter",
