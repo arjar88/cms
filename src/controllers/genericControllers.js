@@ -12,6 +12,7 @@ const isRoleAuthorized = (userRole, collection) => {
     object: ["master admin", "admin"],
     property: ["master admin", "admin"],
     data: ["master admin", "admin"],
+    filter: ["master admin", "admin"],
   };
 
   return (
@@ -71,29 +72,16 @@ const update = async (req, res) => {
 
   try {
     const Model = mongoose.model(collection);
-    if (collection === "data") {
-      const document = await Model.findById(id);
-      if (!document) {
-        return res.status(404).json({ error: "Document not found" });
-      }
-      //update the value properties
-      const updatedValues = { ...document.values, ...data.values };
-      document.values = updatedValues;
-      //save the update
-      const updatedDocument = await document.save();
-      res.status(200).json(updatedDocument);
-    } else {
-      //find and update the property
-      const updatedDocument = await Model.findByIdAndUpdate(
-        id,
-        { ...data },
-        { new: true }
-      );
-      if (!updatedDocument) {
-        return res.status(404).json({ error: "Document not found" });
-      }
-      res.status(200).json(updatedDocument);
+    //find and update the property
+    const updatedDocument = await Model.findByIdAndUpdate(
+      id,
+      { ...data },
+      { new: true }
+    );
+    if (!updatedDocument) {
+      return res.status(404).json({ error: "Document not found" });
     }
+    res.status(200).json(updatedDocument);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
