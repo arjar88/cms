@@ -21,7 +21,7 @@ startServer();
 async function startServer() {
   try {
     const port = process.env.PORT || 3001;
-    await mongoose.connect("mongodb://0.0.0.0:27017/cms-db");
+    await mongoose.connect(process.env.DB_URI);
     console.log("Connected to MongoDB");
     app.listen(port, () => {
       console.log(`Server listening at http://localhost:${port}`);
