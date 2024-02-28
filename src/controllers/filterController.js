@@ -16,6 +16,8 @@ const getMongoDBOperator = (operator, value) => {
       return { $lte: value };
     case "!=":
       return { $ne: value };
+    case "in":
+      return { $in: value };
     default:
       throw new Error(`Unknown operator: ${operator}`);
   }
