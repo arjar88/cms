@@ -10,6 +10,11 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     validate: [isEmail, "Please Enter A Valid Email"],
   },
+  clientId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Client",
+    required: true,
+  },
   password: {
     type: String,
     required: [true, "Password is Required"],
