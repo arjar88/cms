@@ -11,26 +11,25 @@ const dataSchema = new mongoose.Schema({
 
 dataSchema.pre("save", async function (next) {
   try {
-    // Check if objectId and values are present
     if (!this.objectId || !this.values) {
       throw new Error("objectId and values are required.");
     }
 
-    // Retrieve the property schema for the associated objectId
     const properties = await Property.find({ objectId: this.objectId });
 
-    if (!properties) {
-      throw new Error("No property schema found for the associated objectId.");
+    if (properties.length === 0) {
+      throw new Error(
+        `No property schema found for objectId: ${this.objectId}`
+      );
     }
 
     const requiredProperties = properties.map((e) => e.internalName);
     const valuesProperties = Object.keys(this.values);
 
     if (valuesProperties.length > requiredProperties.length) {
-      throw new Error("Containes exccesive properties");
+      throw new Error("Contains excessive properties");
     }
 
-    //
     const missingProperties = requiredProperties.filter(
       (prop) => !valuesProperties.includes(prop)
     );
@@ -40,9 +39,10 @@ dataSchema.pre("save", async function (next) {
         `Missing required properties: ${missingProperties.join(", ")}`
       );
     }
-    next();
+
+    return next(); // Success case
   } catch (error) {
-    next(error);
+    return next(error); // Error case
   }
 });
 
