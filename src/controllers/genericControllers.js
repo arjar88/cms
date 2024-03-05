@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 //const Client = require("../models/Client");
-const Object = require("../models/Object");
-const Properties = require("../models/Property");
-const Data = require("../models/Data");
-const Filter = require("../models/Filter");
-const Published = require("../models/Published");
+//const Object = require("../models/Object");
+//const Properties = require("../models/Property");
+//const Data = require("../models/Data");
+//const Filter = require("../models/Filter");
+//const Published = require("../models/Published");
 
 const isRoleAuthorized = (userRole, collection) => {
   const allowedRoles = {
