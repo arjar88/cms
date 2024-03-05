@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
-const path = require("path");
-const Client = require(path.resolve(__dirname, "../models/Client"));
+const Client = require("../models/Client"));
 const Object = require("../models/Object");
 const Properties = require("../models/Property");
 const Data = require("../models/Data");
