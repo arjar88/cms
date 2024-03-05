@@ -72,21 +72,72 @@ const update = async (req, res) => {
 
   try {
     const Model = mongoose.model(collection);
-    //find and update the property
-    const updatedDocument = await Model.findByIdAndUpdate(
-      id,
-      { ...data },
-      { new: true }
-    );
-    if (!updatedDocument) {
+    const existingDocument = await Model.findById(id);
+
+    if (!existingDocument) {
       return res.status(404).json({ error: "Document not found" });
     }
+
+    // Function to recursively update nested properties
+    const updateNestedProperties = (existingObj, newData, basePath = "") => {
+      for (const key in newData) {
+        // Construct the full path dynamically
+        const fullPath = basePath ? `${basePath}.${key}` : key;
+
+        // If the property is an object and exists in the existingDocument (make sure not to add new properties)
+        if (typeof newData[key] === "object" && existingObj[key]) {
+          updateNestedProperties(existingObj[key], newData[key], fullPath);
+        } else if (existingObj[key] !== undefined) {
+          existingObj[key] = newData[key];
+          existingDocument.markModified(fullPath); // Mark the nested property as modified
+        }
+      }
+    };
+
+    // Apply updates to nested properties
+    updateNestedProperties(existingDocument, data);
+
+    // Add the updateDate field
+    existingDocument.updateDate = Date.now();
+
+    const updatedDocument = await existingDocument.save();
+    console.log(updatedDocument, "ed");
+
     res.status(200).json(updatedDocument);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+// const update = async (req, res) => {
+//   //need to update to make sure it is super generic for updating all collection
+//   //espicially collections with nested properties, based on how now we only want to send
+//   //the props that wneed to be updated and not the whole data object
+
+//   // const { collection, id } = req.params;
+//   // const { data } = req.body;
+
+//   // if (!isRoleAuthorized(req.user.role, collection)) {
+//   //   return res.status(403).json({ error: "Forbidden" });
+//   // }
+
+//   // try {
+//   //   const Model = mongoose.model(collection);
+//   //   const updatedDocument = await Model.findByIdAndUpdate(
+//   //     id,
+//   //     { ...data, updateDate: Date.now },
+//   //     { new: true }
+//   //   );
+//   //   if (!updatedDocument) {
+//   //     return res.status(404).json({ error: "Document not found" });
+//   //   }
+//   //   res.status(200).json(updatedDocument);
+//   // } catch (error) {
+//   //   console.error(error);
+//   //   res.status(500).json({ error: "Internal Server Error" });
+//   // }
+// };
 
 const remove = async (req, res) => {
   const { collection, id } = req.params;
