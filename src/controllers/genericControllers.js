@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Client = require("../models/Client");
+//const Client = require("../models/Client");
 const Object = require("../models/Object");
 const Properties = require("../models/Property");
 const Data = require("../models/Data");
