@@ -62,55 +62,6 @@ const create = async (req, res) => {
   }
 };
 
-// const update = async (req, res) => {
-//   const { collection, id } = req.params;
-//   const { data } = req.body;
-
-//   if (!isRoleAuthorized(req.user.role, collection)) {
-//     return res.status(403).json({ error: "Forbidden" });
-//   }
-
-//   try {
-//     const Model = mongoose.model(collection);
-//     const existingDocument = await Model.findById(id);
-
-//     if (!existingDocument) {
-//       return res.status(404).json({ error: "Document not found" });
-//     }
-
-//     // Function to recursively update nested properties
-//     const updateNestedProperties = (existingObj, newData, basePath = "") => {
-//       for (const key in newData) {
-//         // Construct the full path dynamically
-//         const fullPath = basePath ? `${basePath}.${key}` : key;
-
-//         // If the property is an object and exists in the existingDocument (make sure not to add new properties)
-//         if (typeof newData[key] === "object" && existingObj[key]) {
-//           updateNestedProperties(existingObj[key], newData[key], fullPath);
-//         } else if (existingObj[key] !== undefined) {
-//           existingObj[key] = newData[key];
-//           //https://github.com/Automattic/mongoose/issues/1204
-//           existingDocument.markModified(fullPath);
-//         }
-//       }
-//     };
-
-//     // Apply updates to nested properties
-//     updateNestedProperties(existingDocument, data);
-
-//     // Add the updateDate field
-//     existingDocument.updateDate = Date.now();
-
-//     const updatedDocument = await existingDocument.save();
-//     console.log(updatedDocument, "ed");
-
-//     res.status(200).json(updatedDocument);
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// };
-
 const update = async (req, res) => {
   const { collection, id } = req.params;
   const { data } = req.body;
