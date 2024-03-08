@@ -20,7 +20,6 @@ const isRoleAuthorized = (userRole, collection) => {
   );
 };
 
-// Define CRUD operations for all collections
 const getAll = async (req, res) => {
   const { collection } = req.params;
   try {
