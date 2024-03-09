@@ -5,12 +5,17 @@ const genericRoutes = require("./src/routes/genericRoutes");
 const authRoutes = require("./src/routes/authRoutes");
 const filterRoutes = require("./src/routes/filterRoutes");
 const cookieParser = require("cookie-parser");
+const cors = require("cors");
 
 require("dotenv").config();
 
 //middleware
 app.use(express.json());
 app.use(cookieParser());
+app.use(cors({
+  origin: true,
+  credentials: true,
+}));
 
 app.use("/api", genericRoutes);
 app.use("/auth", authRoutes);
