@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
-const Client = require("../models/Client");
-const Object = require("../models/Object");
-const Properties = require("../models/Property");
-const Data = require("../models/Data");
-const Filter = require("../models/Filter");
-const Published = require("../models/Published");
+const Client = require("../models/Client.js");
+const Object = require("../models/Object.js");
+const Properties = require("../models/Property.js");
+const Data = require("../models/Data.js");
+const Filter = require("../models/Filter.js");
+const Published = require("../models/Published.js");
 
 const isRoleAuthorized = (userRole, collection) => {
   const allowedRoles = {
@@ -20,7 +20,6 @@ const isRoleAuthorized = (userRole, collection) => {
   );
 };
 
-// Define CRUD operations for all collections
 const getAll = async (req, res) => {
   const { collection } = req.params;
   try {
@@ -72,10 +71,9 @@ const update = async (req, res) => {
 
   try {
     const Model = mongoose.model(collection);
-    //find and update the property
     const updatedDocument = await Model.findByIdAndUpdate(
       id,
-      { ...data },
+      { ...data, updateDate: Date.now },
       { new: true }
     );
     if (!updatedDocument) {
