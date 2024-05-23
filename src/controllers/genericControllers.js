@@ -5,6 +5,9 @@ const Properties = require("../models/Property.js");
 const Data = require("../models/Data.js");
 const Filter = require("../models/Filter.js");
 const Published = require("../models/Published.js");
+const Relationship = require("../models/Relationship.js");
+const RelationshipData = require("../models/RelationshipData.js");
+
 
 const isRoleAuthorized = (userRole, collection) => {
   const allowedRoles = {

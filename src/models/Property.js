@@ -8,6 +8,7 @@ const propertySchema = new mongoose.Schema({
     type: String,
     required: true,
     enum: [
+      "text",
       "select",
       "file",
       "image",
