@@ -15,7 +15,7 @@ const relationshipSchema = new mongoose.Schema({
   type: {
     type: String,
     required: true,
-    enum: ["one-to-one", "one-to-many"],
+    enum: ["one-to-one", "one-to-many", "many-to-many"],
   },
   creationDate: { type: Date, default: Date.now },
   updateDate: { type: Date, default: Date.now },

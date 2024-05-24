@@ -12,6 +12,9 @@ const relationshipDataSchema = new mongoose.Schema({
     ref: "Data",
     required: true,
   },
+  notes: {
+    type: String
+  },
   creationDate: { type: Date, default: Date.now },
   updateDate: { type: Date, default: Date.now },
 });
