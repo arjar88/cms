@@ -8,7 +8,6 @@ const Published = require("../models/Published.js");
 const Relationship = require("../models/Relationship.js");
 const RelationshipData = require("../models/RelationshipData.js");
 
-
 const isRoleAuthorized = (userRole, collection) => {
   const allowedRoles = {
     client: ["master admin"],
@@ -25,9 +24,10 @@ const isRoleAuthorized = (userRole, collection) => {
 
 const getAll = async (req, res) => {
   const { collection } = req.params;
+  const queryParams = req.query;
   try {
     const Model = mongoose.model(collection);
-    const documents = await Model.find();
+    const documents = await Model.find(queryParams);
     res.status(200).json(documents);
   } catch (error) {
     console.error(error);
