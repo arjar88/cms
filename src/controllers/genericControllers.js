@@ -1,12 +1,34 @@
 const mongoose = require("mongoose");
+const path = require("path");
+const multer = require("multer");
+const fs = require("fs");
+const uploadFilesToS3 = require("../utils/fileUpload.js");
 const Client = require("../models/Client.js");
-const Object = require("../models/Object.js");
+const ObjectModel = require("../models/Object.js"); // Renamed to avoid conflict with JavaScript's Object
 const Properties = require("../models/Property.js");
 const Data = require("../models/Data.js");
 const Filter = require("../models/Filter.js");
 const Published = require("../models/Published.js");
 const Relationship = require("../models/Relationship.js");
 const RelationshipData = require("../models/RelationshipData.js");
+
+// Ensure the uploads directory exists
+const uploadDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Configure multer storage
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 const isRoleAuthorized = (userRole, collection) => {
   const allowedRoles = {
@@ -52,16 +74,38 @@ const getById = async (req, res) => {
 
 const create = async (req, res) => {
   const { collection } = req.params;
-  const { data } = req.body;
-  try {
-    const Model = mongoose.model(collection);
-    const newDocument = new Model({ ...data });
-    await newDocument.save();
-    res.status(201).json({ message: "Document added successfully" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
+
+  upload.any()(req, res, async (err) => {
+    if (err) {
+      console.log("failed in multer", err);
+      return res.status(500).json({ error: err.message });
+    }
+
+    try {
+      const Model = mongoose.model(collection);
+
+      let fileUrls = {};
+
+      if (req.files) {
+        console.log(req.files);
+        fileUrls = await uploadFilesToS3(req.files);
+      }
+
+      console.log(req.body, "req.body");
+      const { objectId, ...data } = req.body;
+
+      const newDocument = new Model({
+        values: { ...data, ...fileUrls },
+        objectId,
+      });
+      await newDocument.save();
+
+      res.status(201).json({ message: "Document added successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  });
 };
 
 const update = async (req, res) => {
