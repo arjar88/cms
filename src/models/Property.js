@@ -11,15 +11,18 @@ const propertySchema = new mongoose.Schema({
       "text",
       "select",
       "file",
-      "image",
+      "image", //aws buckets
       "images",
       "Number",
-      "HTML",
-      "url",
+      "HTML", //tiny mc
+      "url", //regex to vslidate
       "date",
-      "boolean",
+      "dateTime",
+      "time", //
+      "boolean", //checkbox
     ],
   },
+  optionsTitle: { type: String },
   options: {
     type: [
       {
@@ -31,6 +34,8 @@ const propertySchema = new mongoose.Schema({
   creationDate: { type: Date, default: Date.now },
   updateDate: { type: Date, default: Date.now },
 });
+
+//make sure to make property names belonging to same object UNIQUE!!
 
 //will modify internal name to have all lowercase and underscores between words
 propertySchema.pre("save", function (next) {
